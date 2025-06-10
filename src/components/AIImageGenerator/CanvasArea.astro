@@ -2,9 +2,20 @@
 ---
 
 <div class="relative w-full h-full overflow-hidden">
-  <div class="canvas-area relative overflow-hidden w-full h-full">
-    <!-- Canvas Content -->
-    <div class="w-full h-full flex items-center justify-center text-gray-500">
+  <div class="canvas-area relative overflow-hidden w-full h-full" id="canvas-container">
+    <!-- Konva Canvas will be inserted here -->
+    <div id="konva-stage" class="w-full h-full"></div>
+    
+    <!-- Canvas UI Overlay -->
+    <div class="absolute inset-0 pointer-events-none">
+      <!-- Tool cursor indicator -->
+      <div id="tool-cursor" class="absolute w-4 h-4 border-2 border-blue-500 rounded-full opacity-0 pointer-events-none transform -translate-x-1/2 -translate-y-1/2 z-50"></div>
+      
+      <!-- Selection handles will be managed by Konva -->
+    </div>
+    
+    <!-- Empty state (shown when no content) -->
+    <div id="empty-state" class="absolute inset-0 flex items-center justify-center text-gray-500 pointer-events-none">
       <div style="text-align: center;">
         <div class="bg-gray-200 rounded-lg mx-auto mb-4 flex items-center justify-center" style="width: 96px; height: 96px;">
           <svg width="32" height="32" fill="none" viewBox="0 0 24 24">
@@ -17,3 +28,40 @@
     </div>
   </div>
 </div>
+
+<style>
+  .canvas-area {
+    background: #f8f9fa;
+    background-image: 
+      linear-gradient(45deg, #f0f0f0 25%, transparent 25%), 
+      linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), 
+      linear-gradient(45deg, transparent 75%, #f0f0f0 75%), 
+      linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  }
+  
+  .konva-content {
+    cursor: crosshair;
+  }
+  
+  .tool-select .konva-content {
+    cursor: default;
+  }
+  
+  .tool-text .konva-content {
+    cursor: text;
+  }
+  
+  .tool-pencil .konva-content {
+    cursor: crosshair;
+  }
+  
+  .tool-move .konva-content {
+    cursor: grab;
+  }
+  
+  .tool-move.dragging .konva-content {
+    cursor: grabbing;
+  }
+</style>
