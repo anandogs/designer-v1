@@ -9,26 +9,68 @@ import '../styles/global.css';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Image Generator</title>
     
-    <!-- Konva.js CDN - Using stable version -->
+    <!-- Konva.js CDN - Load first -->
     <script src="https://unpkg.com/konva@9.3.14/konva.min.js"></script>
 </head>
 <body>
     <AIImageGenerator />
     
-    <!-- Load scripts in order - use correct paths for Astro -->
-    <script type="module" src="/scripts/canvasManager.js"></script>
-    <script type="module" src="/scripts/imageGenerator.js"></script>
-    
+    <!-- Load enhanced scripts with proper error handling -->
     <script type="module">
-        // Enhanced generate button functionality to work with canvas
-        document.addEventListener('DOMContentLoaded', function() {
+        // Enhanced initialization with better error handling
+        let scriptsLoaded = 0;
+        const totalScripts = 2;
+        
+        function checkAllScriptsLoaded() {
+            scriptsLoaded++;
+            if (scriptsLoaded === totalScripts) {
+                console.log('All scripts loaded, initializing application...');
+                initializeApplication();
+            }
+        }
+        
+        // Load canvas manager
+        import('/scripts/canvasManager.js')
+            .then(() => {
+                console.log('Canvas manager loaded');
+                checkAllScriptsLoaded();
+            })
+            .catch(error => {
+                console.error('Failed to load canvas manager:', error);
+                checkAllScriptsLoaded(); // Continue anyway
+            });
+        
+        // Load image generator
+        import('/scripts/imageGenerator.js')
+            .then(() => {
+                console.log('Image generator loaded');
+                checkAllScriptsLoaded();
+            })
+            .catch(error => {
+                console.error('Failed to load image generator:', error);
+                checkAllScriptsLoaded(); // Continue anyway
+            });
+        
+        function initializeApplication() {
+            console.log('Initializing AI Image Generator application...');
+            
+            // Enhanced generate button functionality
             const generateButton = document.getElementById('generate-btn');
             const promptTextarea = document.getElementById('prompt-textarea');
             
-            generateButton?.addEventListener('click', async function() {
-                if (!this.classList.contains('disabled')) {
-                    const prompt = promptTextarea?.value || 'A beautiful landscape';
+            if (generateButton && promptTextarea) {
+                generateButton.addEventListener('click', async function() {
+                    if (this.classList.contains('disabled')) return;
                     
+                    const prompt = promptTextarea.value?.trim() || 'A beautiful landscape';
+                    
+                    // Validate prompt
+                    if (prompt.length < 3) {
+                        showNotification('Please enter a more detailed prompt', 'error');
+                        return;
+                    }
+                    
+                    // Disable button and show loading state
                     this.classList.add('disabled');
                     this.innerHTML = `
                         <div class="flex items-center justify-center w-full">
@@ -38,51 +80,260 @@ import '../styles/global.css';
                     `;
                     
                     try {
-                        // Simulate AI generation with a placeholder image
-                        await simulateImageGeneration(prompt);
+                        // Get current image size settings
+                        const width = parseInt(document.getElementById('width-input')?.value) || 512;
+                        const height = parseInt(document.getElementById('height-input')?.value) || 512;
+                        
+                        await simulateImageGeneration(prompt, width, height);
+                        showNotification('Image generated successfully!', 'success');
+                        
                     } catch (error) {
                         console.error('Generation failed:', error);
+                        showNotification('Generation failed. Please try again.', 'error');
                     } finally {
-                        // Reset button
-                        this.classList.remove('disabled');
-                        this.innerHTML = `
-                            <div class="flex items-center">
-                                <span class="mr-1">4</span>
-                                <svg width="12" height="12" fill="none" viewBox="0 0 24 24">
-                                    <path fill="currentColor" d="m5 9.415 1.414-1.414 5.293 5.293L17 8l1.414 1.414-6.707 6.707z"/>
-                                </svg>
-                            </div>
-                            <div style="width: 1px; height: 24px; background: rgba(255,255,255,0.2);"></div>
-                            <div class="flex-1 flex justify-center items-center">
-                                <span>Generate</span>
-                                <div class="ml-2 flex items-center">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <polyline points="13.18 1.37 13.18 9.64 21.45 9.64 10.82 22.63 10.82 14.36 2.55 14.36 13.18 1.37"/>
-                                    </svg>
-                                    <span class="ml-1">36</span>
-                                </div>
-                            </div>
-                        `;
+                        // Reset button state
+                        resetGenerateButton(this);
                     }
-                }
-            });
+                });
+            }
             
-            async function simulateImageGeneration(prompt) {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        // Generate a placeholder image using a service like picsum or create a colored rectangle
-                        const imageUrl = `https://picsum.photos/512/512?random=${Date.now()}`;
+            // Tool selection initialization
+            initializeToolSelection();
+            
+            // Other UI initialization
+            initializeUIComponents();
+            
+            console.log('Application initialized successfully');
+        }
+        
+        function resetGenerateButton(button) {
+            button.classList.remove('disabled');
+            button.innerHTML = `
+                <div class="flex items-center">
+                    <span class="mr-1">4</span>
+                    <svg width="12" height="12" fill="none" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="m5 9.415 1.414-1.414 5.293 5.293L17 8l1.414 1.414-6.707 6.707z"/>
+                    </svg>
+                </div>
+                <div style="width: 1px; height: 24px; background: rgba(255,255,255,0.2);"></div>
+                <div class="flex-1 flex justify-center items-center">
+                    <span>Generate</span>
+                    <div class="ml-2 flex items-center">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <polyline points="13.18 1.37 13.18 9.64 21.45 9.64 10.82 22.63 10.82 14.36 2.55 14.36 13.18 1.37"/>
+                        </svg>
+                        <span class="ml-1">36</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        async function simulateImageGeneration(prompt, width = 512, height = 512) {
+            return new Promise((resolve, reject) => {
+                // Simulate realistic processing time
+                const processingTime = 2000 + Math.random() * 3000; // 2-5 seconds
+                
+                setTimeout(() => {
+                    try {
+                        // Use different image services for variety
+                        const imageServices = [
+                            `https://picsum.photos/${width}/${height}?random=${Date.now()}`,
+                            `https://source.unsplash.com/${width}x${height}/?nature,landscape&sig=${Date.now()}`,
+                            `https://loremflickr.com/${width}/${height}/nature,art?random=${Date.now()}`
+                        ];
                         
-                        // Add the generated image to canvas
-                        if (window.canvasManager) {
-                            window.canvasManager.addGeneratedImage(imageUrl, 512, 512);
+                        const imageUrl = imageServices[Math.floor(Math.random() * imageServices.length)];
+                        
+                        // Add generated image to canvas if available
+                        if (window.canvasManager && window.canvasManager.isInitialized) {
+                            window.canvasManager.addGeneratedImage(imageUrl, width, height);
+                        } else {
+                            console.warn('Canvas manager not available, image generation completed but not displayed');
                         }
                         
                         resolve(imageUrl);
-                    }, 3000);
+                    } catch (error) {
+                        reject(error);
+                    }
+                }, processingTime);
+            });
+        }
+        
+        function initializeToolSelection() {
+            const toolButtons = document.querySelectorAll('[data-tool]');
+            if (toolButtons.length === 0) {
+                console.warn('No tool buttons found');
+                return;
+            }
+            
+            toolButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tool = this.getAttribute('data-tool');
+                    
+                    // Update button states
+                    toolButtons.forEach(btn => btn.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    // Update canvas tool if available
+                    if (window.canvasManager && window.canvasManager.isInitialized) {
+                        window.canvasManager.setTool(tool);
+                    }
+                    
+                    console.log(`Tool selected: ${tool}`);
+                });
+            });
+            
+            // Set default tool
+            const defaultTool = document.querySelector('[data-tool="select"]');
+            if (defaultTool) {
+                defaultTool.classList.add('selected');
+            }
+        }
+        
+        function initializeUIComponents() {
+            // Advanced toggle
+            const advancedToggle = document.getElementById('advanced-toggle');
+            if (advancedToggle) {
+                advancedToggle.addEventListener('change', function() {
+                    console.log('Advanced mode:', this.checked);
+                    // Could show/hide advanced options here
                 });
             }
+            
+            // Textarea auto-resize
+            const textarea = document.getElementById('prompt-textarea');
+            if (textarea) {
+                textarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+                });
+            }
+            
+            // Ratio selector
+            initializeRatioSelector();
+            
+            console.log('UI components initialized');
+        }
+        
+        function initializeRatioSelector() {
+            const ratioSelector = document.getElementById('ratio-selector');
+            const ratioText = document.getElementById('ratio-text');
+            const widthInput = document.getElementById('width-input');
+            const heightInput = document.getElementById('height-input');
+            
+            if (!ratioSelector || !ratioText || !widthInput || !heightInput) {
+                console.warn('Ratio selector elements not found');
+                return;
+            }
+            
+            const ratios = [
+                { name: '3:4', width: 768, height: 1024 },
+                { name: '1:1', width: 1024, height: 1024 },
+                { name: '4:3', width: 1024, height: 768 },
+                { name: '16:9', width: 1024, height: 576 },
+                { name: '9:16', width: 576, height: 1024 }
+            ];
+            
+            let currentRatioIndex = 0;
+
+            ratioSelector.addEventListener('click', function() {
+                currentRatioIndex = (currentRatioIndex + 1) % ratios.length;
+                const ratio = ratios[currentRatioIndex];
+                
+                ratioText.textContent = ratio.name;
+                widthInput.value = ratio.width;
+                heightInput.value = ratio.height;
+                
+                updateRatioIcon(ratio.name);
+            });
+        }
+        
+        function updateRatioIcon(ratioName) {
+            const ratioIcon = document.querySelector('#ratio-selector .border');
+            if (ratioIcon) {
+                const iconStyles = {
+                    '3:4': 'width: 9px; height: 12px;',
+                    '1:1': 'width: 10px; height: 10px;',
+                    '4:3': 'width: 12px; height: 9px;',
+                    '16:9': 'width: 14px; height: 8px;',
+                    '9:16': 'width: 8px; height: 14px;'
+                };
+                
+                ratioIcon.style.cssText = iconStyles[ratioName] || 'width: 9px; height: 12px;';
+            }
+        }
+        
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notif => notif.remove());
+            
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            
+            const colors = {
+                success: 'background: #10b981; color: white;',
+                error: 'background: #ef4444; color: white;', 
+                info: 'background: #3b82f6; color: white;'
+            };
+            
+            notification.innerHTML = `
+                <div class="flex items-center justify-between p-3 rounded-lg shadow-lg" style="${colors[type] || colors.info}">
+                    <span class="text-sm font-medium">${message}</span>
+                    <button class="ml-3 text-lg leading-none hover:opacity-75" onclick="this.closest('.notification').remove()">&times;</button>
+                </div>
+            `;
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1000;
+                min-width: 300px;
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.style.animation = 'slideOut 0.3s ease-in';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 5000);
+        }
+        
+        // Global error handling
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+            showNotification('An unexpected error occurred', 'error');
         });
+        
+        // Handle unhandled promise rejections
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('Unhandled promise rejection:', event.reason);
+            showNotification('An error occurred during processing', 'error');
+        });
+        
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            
+            .notification {
+                animation: slideIn 0.3s ease-out;
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
