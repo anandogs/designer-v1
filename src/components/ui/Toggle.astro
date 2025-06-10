@@ -1,0 +1,26 @@
+---
+export interface Props {
+  id: string;
+  checked?: boolean;
+  label?: string;
+  class?: string;
+}
+
+const { 
+  id,
+  checked = false,
+  label = '',
+  class: className = '',
+  ...rest 
+} = Astro.props;
+---
+
+<div class={`flex items-center ${className}`}>
+  {label && (
+    <span class="text-xs font-semibold text-gray-700 mr-2">{label}</span>
+  )}
+  <label class="toggle-switch">
+    <input type="checkbox" {id} {checked} {...rest} />
+    <span class="slider"></span>
+  </label>
+</div>

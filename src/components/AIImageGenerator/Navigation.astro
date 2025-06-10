@@ -1,0 +1,74 @@
+---
+import Button from '../ui/Button.astro';
+---
+
+<nav class="relative flex items-center justify-between flex-shrink-0 h-12 px-4 bg-white border-b border-gray-200" style="min-width: 1200px;">
+  <!-- Left Section -->
+  <div class="flex items-center z-10 gap-6">
+    <!-- Logo -->
+    <div>
+      <Button variant="icon" size="sm" class="h-7 px-2 gap-1">
+        <svg width="30" height="18" fill="none" viewBox="0 0 30 18" class="text-gray-800">
+          <rect width="26" height="14" x="2" y="2" rx="2" fill="currentColor"/>
+        </svg>
+        <svg width="12" height="12" fill="none" viewBox="0 0 12 12">
+          <path fill="#2D2D2D" fill-rule="evenodd" d="M2.5 4.707 3.207 4l2.647 2.646L8.5 4l.707.707-3.353 3.354z"/>
+        </svg>
+      </Button>
+    </div>
+    
+    <!-- Tool Icons -->
+    <div class="flex gap-4 items-center">
+      <Button variant="icon" size="sm" class="w-7 h-7" selected={true} data-tool="select">
+        <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
+          <path fill="currentColor" d="M1.898 1.633A1 1 0 0 0 .633 2.898L4.547 14.64c.285.855 1.467.926 1.852.111l2.21-4.666a1 1 0 0 1 .476-.475l4.666-2.21c.815-.386.744-1.568-.111-1.853zm11.425 4.863L1.582 2.582l3.914 11.741 2.21-4.666a2 2 0 0 1 .951-.951z"/>
+        </svg>
+      </Button>
+      <Button variant="icon" size="sm" class="w-7 h-7" data-tool="text">
+        <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
+          <path fill="currentColor" d="M2.5 2a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v.857a.5.5 0 0 1-1 0V2.5h-4v11h1.167a.5.5 0 0 1 0 1H6.333a.5.5 0 0 1 0-1H7.5v-11h-4v.357a.5.5 0 1 1-1 0z"/>
+        </svg>
+      </Button>
+      <Button variant="icon" size="sm" class="w-7 h-7" data-tool="shape">
+        <svg width="16" height="16" fill="none" viewBox="0 0 14 14">
+          <path fill="currentColor" fill-rule="evenodd" d="M12.688 2.917c0-.886-.719-1.604-1.605-1.604H2.917c-.886 0-1.604.718-1.604 1.604v8.166c0 .886.718 1.604 1.604 1.604h8.166c.886 0 1.604-.718 1.604-1.604zm-1.605-.73a.73.73 0 0 1 .73.73v8.166a.73.73 0 0 1-.73.73H2.917a.73.73 0 0 1-.73-.73V2.917a.73.73 0 0 1 .73-.73z"/>
+        </svg>
+      </Button>
+      <Button variant="icon" size="sm" class="w-7 h-7" data-tool="pencil">
+        <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
+          <path fill="currentColor" d="M11.105 1.53a2.38 2.38 0 1 1 3.364 3.365l-8.898 8.9a1.83 1.83 0 0 1-.761.455l-2.904.88a.833.833 0 0 1-1.038-1.036v-.002l.881-2.901v-.002c.089-.287.246-.548.459-.76zm.707.707-8.898 8.9a.83.83 0 0 0-.208.345l-.79 2.6 2.603-.788c.13-.04.249-.111.346-.207l8.897-8.9a1.38 1.38 0 1 0-1.95-1.95"/>
+        </svg>
+      </Button>
+      <Button variant="icon" size="sm" class="w-7 h-7" data-tool="move">
+        <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
+          <path fill="currentColor" d="M6.704 1.371A1.833 1.833 0 0 1 9.81 2.379a1.833 1.833 0 0 1 2.666 1.334 1.833 1.833 0 0 1 2.69 1.621v4a5.833 5.833 0 0 1-5.834 5.833H8c-2.001 0-3.26-.627-4.346-1.705v-.001l-2.4-2.4-.018-.019A1.833 1.833 0 0 1 3.5 8.22V4a1.833 1.833 0 0 1 2.69-1.622c.06-.38.238-.733.514-1.008"/>
+        </svg>
+      </Button>
+    </div>
+  </div>
+  
+  <!-- Right Section -->
+  <div class="flex items-center gap-2">
+    <Button variant="icon" size="sm" class="h-7 px-2 gap-1">
+      <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
+        <path fill="currentColor" d="M6.166 5.333a1.833 1.833 0 1 1 3.667 0 1.833 1.833 0 0 1-3.667 0M8 4.5a.833.833 0 1 0 0 1.666A.833.833 0 0 0 8 4.5"/>
+      </svg>
+      <span style="font-size: 0.75rem;">Showcase</span>
+    </Button>
+    <Button variant="icon" size="sm" class="h-7 px-2 gap-1">
+      <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
+        <path fill="currentColor" d="M3.5 5.333a.5.5 0 0 1 .5-.5h1.333a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.5-.5"/>
+      </svg>
+      <span style="font-size: 0.75rem;">Tutorials</span>
+    </Button>
+    
+    <!-- User Profile -->
+    <div class="rounded-full bg-gray-100 py-1 px-2 relative">
+      <div class="flex items-center cursor-pointer">
+        <div class="w-4 h-4 bg-yellow-400 rounded mr-1" style="width: 10px; height: 10px;"></div>
+        <div style="min-width: 16px; text-align: center; font-size: 0.75rem; font-weight: 500;">200</div>
+      </div>
+    </div>
+    <div class="w-7 h-7 rounded-full bg-gray-300"></div>
+  </div>
+</nav>

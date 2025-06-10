@@ -1,0 +1,26 @@
+---
+import Navigation from './Navigation.astro';
+import LeftPanel from './LeftPanel.astro';
+import CanvasArea from './CanvasArea.astro';
+import ZoomControls from './ZoomControls.astro';
+---
+
+<div class="w-full h-screen relative" style="background: #f3f4f5;">
+  <div class="relative flex flex-col items-stretch w-full h-screen overflow-hidden">
+    
+    <!-- Navigation Bar -->
+    <Navigation />
+    
+    <!-- Main Content Area -->
+    <div class="flex flex-1 items-stretch relative">
+      <!-- Left Panel -->
+      <LeftPanel />
+      
+      <!-- Main Canvas Area -->
+      <CanvasArea />
+      
+      <!-- Zoom Controls -->
+      <ZoomControls />
+    </div>
+  </div>
+</div>

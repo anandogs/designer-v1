@@ -1,0 +1,48 @@
+---
+export interface Props {
+  type?: 'text' | 'password' | 'email' | 'number' | 'search' | 'tel' | 'url' | 'textarea';
+  placeholder?: string;
+  value?: string | number;
+  readonly?: boolean;
+  class?: string;
+  id?: string;
+  rows?: number;
+}
+
+const { 
+  type = 'text',
+  placeholder = '',
+  value = '',
+  readonly = false,
+  class: className = '',
+  id,
+  rows,
+  ...rest 
+} = Astro.props;
+
+const baseClasses = 'input-field w-full';
+const classes = [baseClasses, className].filter(Boolean).join(' ');
+
+const isTextarea = type === 'textarea';
+---
+
+{isTextarea ? (
+  <textarea
+    class={classes}
+    {id}
+    {placeholder}
+    {readonly}
+    {rows}
+    {...rest}
+  >{value}</textarea>
+) : (
+  <input
+    type={type}
+    class={classes}
+    id={id}
+    placeholder={placeholder}
+    value={value}
+    readonly={readonly}
+    {...rest}
+  />
+)}

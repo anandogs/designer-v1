@@ -1,0 +1,24 @@
+---
+import Button from '../ui/Button.astro';
+---
+
+<div class="absolute bottom-4 right-4 flex items-center">
+  <div class="flex items-center h-8 px-3 bg-white rounded shadow text-xs text-gray-800" style="gap: 12px;">
+    <Button variant="icon" size="sm" id="zoom-out" class="flex items-center justify-center w-5 h-5 hover:bg-gray-100 rounded">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M5 12a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1"/>
+      </svg>
+    </Button>
+    <span class="cursor-pointer" style="width: 32px; text-align: center;" id="zoom-display">25%</span>
+    <Button variant="icon" size="sm" id="zoom-in" class="flex items-center justify-center w-5 h-5 hover:bg-gray-100 rounded">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M13 5a1 1 0 1 0-2 0v6H5a1 1 0 1 0 0 2h6v6a1 1 0 1 0 2 0v-6h6a1 1 0 1 0 0-2h-6z"/>
+      </svg>
+    </Button>
+    <Button variant="icon" size="sm" class="flex items-center justify-center w-5 h-5 hover:bg-gray-100 rounded ml-3">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M12 2a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V4.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L10.586 2H3a1 1 0 0 1 0-2h8a1 1 0 0 1 1 1"/>
+      </svg>
+    </Button>
+  </div>
+</div>

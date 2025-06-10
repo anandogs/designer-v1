@@ -1,0 +1,191 @@
+---
+import Button from '../ui/Button.astro';
+import Input from '../ui/Input.astro';
+import Toggle from '../ui/Toggle.astro';
+---
+
+<aside class="absolute z-100 left-2 top-2 flex flex-col shadow-lg bg-white rounded-md border border-gray-200 w-80" style="max-height: calc(100% - 16px);">
+  <!-- Panel Header -->
+  <div class="flex items-center justify-between px-4 py-2 h-12 border-b border-gray-200 bg-gray-50" style="border-top-left-radius: 0.375rem; border-top-right-radius: 0.375rem;">
+    <div class="flex items-center text-gray-900">
+      <svg width="14" height="14" fill="none" viewBox="0 0 14 14" class="text-blue-600">
+        <path fill="currentColor" d="M8.166.584h-1.75v1.75h-1.75v1.75h-1.75v1.75h-1.75v1.75h1.75v1.75h1.75v1.75h1.75v1.75h1.75v-1.75l4.666-3.5v-1.75l-4.666-3.5zm-3.5 7h1.75v1.75h-1.75zm0-1.75h1.75v-1.75h-1.75zm0 0v1.75h-1.75v-1.75z"/>
+      </svg>
+      <div class="ml-2 font-medium text-sm">Generator</div>
+    </div>
+    <Button variant="icon" size="sm" class="w-4 h-4 text-blue-600">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M11.416 1.246a1 1 0 0 1 .097 1.41l-.948 1.09A11 11 0 0 1 12 3.65a9.67 9.67 0 0 1 9.67 9.67A9.67 9.67 0 0 1 12 22.99a9.67 9.67 0 0 1-9.67-9.67 9.67 9.67 0 0 1 1.628-5.374 1 1 0 1 1 1.664 1.11A7.67 7.67 0 0 0 4.33 13.32 7.67 7.67 0 0 0 12 20.99a7.67 7.67 0 0 0 7.67-7.67A7.67 7.67 0 0 0 12 5.65c-.617 0-1.197.065-1.745.174l1.574 1.149a1 1 0 1 1-1.18 1.615l-3.37-2.46a1 1 0 0 1-.164-1.465l2.89-3.32a1 1 0 0 1 1.41-.097"/>
+      </svg>
+    </Button>
+  </div>
+  
+  <!-- Panel Content -->
+  <div class="flex-1 overflow-y-auto scrollbar-thin">
+    <!-- Model Selection -->
+    <div class="p-4">
+      <div class="flex items-center justify-between w-full h-10 mt-1 cursor-pointer" id="model-selector">
+        <h5 class="text-gray-800 text-xs font-bold">Model</h5>
+        <div class="flex items-center">
+          <div class="w-4 h-4 bg-gray-300 rounded mr-1" style="width: 14px; height: 14px;"></div>
+          <span class="text-sm text-gray-700 font-semibold">Shakker Zeno-1</span>
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" class="ml-1">
+            <path fill="currentColor" d="M9.414 18.708 8 17.294 13.293 12 8 6.708l1.414-1.414L16.121 12z"/>
+          </svg>
+        </div>
+      </div>
+      
+      <!-- LoRA Section -->
+      <div class="my-4 border-t border-gray-200"></div>
+      <div class="w-full">
+        <div class="flex items-center h-10">
+          <h5 class="text-gray-700 text-xs font-semibold">Styles <span class="text-gray-400 font-normal">LoRA</span></h5>
+        </div>
+        <button class="w-full h-16 bg-gray-100 hover:bg-gray-200 rounded flex px-1 items-center transition-colors" id="lora-selector">
+          <div class="w-10 h-12 bg-white rounded mr-4 flex justify-center items-center">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M13 5a1 1 0 1 0-2 0v6H5a1 1 0 1 0 0 2h6v6a1 1 0 1 0 2 0v-6h6a1 1 0 1 0 0-2h-6z"/>
+            </svg>
+          </div>
+          <span class="text-xs text-gray-500">Mood/Texture/Character</span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Prompt Section -->
+    <div class="border-t border-gray-200 px-4 py-4 bg-gray-50">
+      <div class="w-full rounded bg-gray-100 border border-gray-200">
+        <Input 
+          type="textarea"
+          id="prompt-textarea"
+          class="w-full p-3 bg-gray-50 resize-none text-gray-800 border-none outline-none text-sm leading-5" 
+          placeholder="Describe a picture……" 
+          rows={8}
+        />
+      </div>
+      <div class="flex w-full mt-2 justify-between">
+        <div class="flex items-center cursor-pointer text-gray-700" id="templates-btn">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M5 20.264V4.5h14v15.764l-5.435-2.717a3.5 3.5 0 0 0-3.13 0zM3 4a1.5 1.5 0 0 1 1.5-1.5h15A1.5 1.5 0 0 1 21 4v17.073a1.5 1.5 0 0 1-2.17 1.342l-6.16-3.08a1.5 1.5 0 0 0-1.34 0l-6.16 3.08A1.5 1.5 0 0 1 3 21.073z"/>
+          </svg>
+          <span class="text-xs ml-1">Templates</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <Button variant="icon" size="sm" class="w-4 h-4 text-blue-600">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M17.5 1.001a.775.775 0 0 0-.747.566l-.873 3.384a.6.6 0 0 1-.43.43l-3.375.871-.012.003a.775.775 0 0 0 0 1.492l3.386.873a.6.6 0 0 1 .431.43l.87 3.375.002.01a.775.775 0 0 0 1.493 0l.873-3.384a.6.6 0 0 1 .43-.431l3.375-.87.008-.002a.775.775 0 0 0 0-1.494l-3.382-.872a.6.6 0 0 1-.431-.43l-.87-3.375-.002-.01a.775.775 0 0 0-.747-.566"/>
+            </svg>
+          </Button>
+          <Button variant="icon" size="sm" class="w-4 h-4 text-gray-700">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M4 5.001a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-6.35l-2.624-5.906c-.828-1.863-3.21-2.358-4.738-1.064-.446.377-.889.745-1.288 1.066z"/>
+            </svg>
+          </Button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Settings Sections -->
+    <div class="p-4 space-y-4">
+      <!-- Image to Image -->
+      <div class="panel-section">
+        <div class="flex items-center justify-between h-10">
+          <h3 class="text-sm font-semibold">Image to Image</h3>
+          <Button variant="icon" size="sm" class="w-7 h-7 rounded hover:bg-gray-100">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M13 5a1 1 0 1 0-2 0v6H5a1 1 0 1 0 0 2h6v6a1 1 0 1 0 2 0v-6h6a1 1 0 1 0 0-2h-6z"/>
+            </svg>
+          </Button>
+        </div>
+      </div>
+      
+      <!-- Image Reference -->
+      <div class="panel-section">
+        <div class="flex items-center justify-between h-10">
+          <h5 class="text-gray-700 text-xs font-bold">Image Reference</h5>
+          <Button variant="icon" size="sm" class="w-7 h-7 rounded hover:bg-gray-100">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M13 5a1 1 0 1 0-2 0v6H5a1 1 0 1 0 0 2h6v6a1 1 0 1 0 2 0v-6h6a1 1 0 1 0 0-2h-6z"/>
+            </svg>
+          </Button>
+        </div>
+      </div>
+      
+      <!-- Color Palette -->
+      <div class="panel-section">
+        <div class="flex items-center justify-between h-10">
+          <h5 class="text-gray-700 text-xs font-bold">Color Palette</h5>
+          <Button variant="icon" size="sm" class="w-7 h-7 rounded hover:bg-gray-100">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M13 5a1 1 0 1 0-2 0v6H5a1 1 0 1 0 0 2h6v6a1 1 0 1 0 2 0v-6h6a1 1 0 1 0 0-2h-6z"/>
+            </svg>
+          </Button>
+        </div>
+      </div>
+      
+      <!-- Image Size -->
+      <div class="py-4">
+        <div class="flex items-center justify-between h-10 mb-2">
+          <h5 class="text-gray-800 text-xs font-bold">Image Size</h5>
+        </div>
+        <div class="flex items-center justify-between mb-4">
+          <div class="px-2 flex items-center justify-center h-7 bg-gray-200 rounded cursor-pointer" id="ratio-selector">
+            <button class="flex items-center text-xs text-gray-700">
+              <div class="border border-gray-800 rounded-sm mr-1" style="width: 9px; height: 12px;"></div>
+              <span id="ratio-text">3:4</span>
+            </button>
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" class="ml-2">
+              <path fill="currentColor" d="m5 9.415 1.414-1.414 5.293 5.293L17 8l1.414 1.414-6.707 6.707z"/>
+            </svg>
+          </div>
+          <div class="flex items-center gap-1">
+            <div class="flex items-center">
+              <span class="text-xs text-gray-500 mr-1">W</span>
+              <Input type="number" id="width-input" value={768} readonly class="w-16 h-7" />
+            </div>
+            <Button variant="icon" size="sm" class="w-4 h-7">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M17 10V5A5 5 0 0 0 7 5v5h2V5a3 3 0 1 1 6 0v5zM12 24.001a5 5 0 0 0 5-5v-5h-2v5a3 3 0 0 1-6 0v-5H7v5a5 5 0 0 0 5 5"/>
+              </svg>
+            </Button>
+            <div class="flex items-center">
+              <span class="text-xs text-gray-500 mr-1">H</span>
+              <Input type="number" id="height-input" value={1024} readonly class="w-16 h-7" />
+            </div>
+          </div>
+        </div>
+        
+        <!-- Advanced Toggle -->
+        <div class="flex items-center justify-between">
+          <Toggle id="advanced-toggle" label="Advanced" />
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Generate Button -->
+  <div class="p-4 border-t border-gray-200">
+    <div class="flex items-center gap-3">
+      <div class="flex-grow h-10">
+        <Button variant="generate" id="generate-btn" class="w-full h-full text-white text-xs font-medium rounded-lg flex items-center justify-between px-4">
+          <div class="flex items-center">
+            <span class="mr-1">4</span>
+            <svg width="12" height="12" fill="none" viewBox="0 0 24 24">
+              <path fill="currentColor" d="m5 9.415 1.414-1.414 5.293 5.293L17 8l1.414 1.414-6.707 6.707z"/>
+            </svg>
+          </div>
+          <div style="width: 1px; height: 24px; background: rgba(255,255,255,0.2);"></div>
+          <div class="flex-1 flex justify-center items-center">
+            <span>Generate</span>
+            <div class="ml-2 flex items-center">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <polyline points="13.18 1.37 13.18 9.64 21.45 9.64 10.82 22.63 10.82 14.36 2.55 14.36 13.18 1.37"/>
+              </svg>
+              <span class="ml-1">36</span>
+            </div>
+          </div>
+        </Button>
+      </div>
+    </div>
+  </div>
+</aside>
